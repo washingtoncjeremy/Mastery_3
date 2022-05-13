@@ -31,6 +31,9 @@ public class Packaging {
      */
     private BigDecimal height;
 
+    //TEMPORARY
+    public Packaging(){};
+
     /**
      * Instantiates a new Packaging object.
      * @param material - the Material of the package
