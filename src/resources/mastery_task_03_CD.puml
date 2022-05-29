@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+class Packaging {
+
+-Material material;
++getMass()
++canFitItem()
+
+}
+
+class Box  {
+
+-BigDecimal length;
+-BigDecimal width;
+-BigDecimal height;
+
+}
+
+class PolyBag {
+
+-BigDecimal volume;
+
+}
+
+enum Material {
+
+CORRUGATE
+LAMINATED_PLASTIC
+
+
+}
+
+ Packaging  <|-- Box
+ Packaging  <|-- PolyBag
+ Packaging  --> Material
+
+@enduml

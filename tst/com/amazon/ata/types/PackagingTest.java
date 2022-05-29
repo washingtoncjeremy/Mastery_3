@@ -22,7 +22,7 @@ public class PackagingTest {
 
     @BeforeEach
     public void setUp() {
-        packaging = new Packaging(packagingMaterial, packagingLength, packagingWidth, packagingHeight);
+        packaging = new Box(packagingMaterial, packagingLength, packagingWidth, packagingHeight);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class PackagingTest {
     @Test
     public void getMass_calculatesMass_returnsCorrectMass() {
         // GIVEN
-        packaging = new Packaging(Material.CORRUGATE, BigDecimal.TEN, BigDecimal.TEN, BigDecimal.valueOf(20));
+        packaging = new Box(Material.CORRUGATE, BigDecimal.TEN, BigDecimal.TEN, BigDecimal.valueOf(20));
 
         // WHEN
         BigDecimal mass = packaging.getMass();

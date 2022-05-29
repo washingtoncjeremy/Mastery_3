@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ShipmentOptionTest {
 
-    private Packaging packaging = new Packaging(Material.CORRUGATE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
+    private Packaging packaging = new Box(Material.CORRUGATE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
     private Item item = Item.builder()
         .withAsin("asin")
         .withDescription("description")

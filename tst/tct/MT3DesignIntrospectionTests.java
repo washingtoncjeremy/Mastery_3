@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @Tag("MT03_DESIGN")
 public class MT3DesignIntrospectionTests {
+
     private static final String CLASS_DIAGRAM_PATH = "mastery_task_03_CD.puml";
     String content;
 
