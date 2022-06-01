@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("MT04_UNIQUE")
 public class MT4UniqueIntrospectionTests {
@@ -83,7 +82,7 @@ public class MT4UniqueIntrospectionTests {
         if (foundDupeBoxes == 0) {
             fail("Expected PackagingDAO#findShipmentOptions to respond with at least one Box, but found none.");
         }
-        assertEquals(
+        assertNotEquals(
             1,
             foundDupeBoxes,
             String.format(

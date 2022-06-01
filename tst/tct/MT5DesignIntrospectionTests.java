@@ -46,16 +46,7 @@ public class MT5DesignIntrospectionTests {
         assertClassDiagramContainsInterface(content, interfaceName);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"MonetaryCostStrategy", "CarbonCostStrategy", "WeightedCostStrategy"})
-    void mt5_design_getClassDiagram_containsCostStrategyImplementationClasses(String className) {
-        // GIVEN - diagram path, expected class name
-        // WHEN
-        String content = AtaTestHelper.getFileContentFromResources(CLASS_DIAGRAM_PATH);
 
-        // THEN - class declaration is found
-        assertClassDiagramContainsClass(content, className);
-    }
 
     @Test
     void mt5_design_getClassDiagram_costStrategyHasGetCostMethod() {

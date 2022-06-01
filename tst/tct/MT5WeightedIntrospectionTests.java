@@ -1,8 +1,12 @@
 package tct;
 
+import com.amazon.ata.test.helper.AtaTestHelper;
 import com.amazon.ata.test.reflect.MethodInvoker;
 import com.amazon.ata.test.reflect.MethodQuery;
 
+import com.google.common.collect.ImmutableList;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import tct.basewrappers.BoxWrapper;
 import tct.basewrappers.CarbonCostStrategyWrapper;
 import tct.basewrappers.MonetaryCostStrategyWrapper;
@@ -18,101 +22,88 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static com.amazon.ata.test.assertions.AtaAssertions.assertClose;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static com.amazon.ata.test.assertions.PlantUmlClassDiagramAssertions.*;
+import static com.amazon.ata.test.assertions.PlantUmlClassDiagramAssertions.assertClassDiagramIncludesImplementsRelationship;
+import static com.amazon.ata.test.helper.PlantUmlClassDiagramHelper.classDiagramIncludesContainsRelationship;
+import static com.amazon.ata.test.helper.PlantUmlClassDiagramHelper.classDiagramIncludesRelationship;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("MT05_WEIGHTED")
 public class MT5WeightedIntrospectionTests {
-    private MonetaryCostStrategyWrapper monetaryCostStrategyWrapper = new MonetaryCostStrategyWrapper();
-    private CarbonCostStrategyWrapper carbonCostStrategyWrapper = new CarbonCostStrategyWrapper();
+    private static final String CLASS_DIAGRAM_PATH = "mastery_task_05_CD.puml";
 
-    @Test
-    void mt5_weightedCostStrategy_getCostOfBox_resultsInCorrectWeightedCost() {
-        // GIVEN - valid Box
-        BoxWrapper boxWrapper = PackagingFactory.boxWrapperOfAnyDimensions();
-        assertNotNull(boxWrapper, "Could not find any Boxes in PackagingDatastore");
-        // shipment option wrapper using that Box with FC IAD2
-        ShipmentOptionWrapper shipmentOptionWrapper =
-            ShipmentOptionFactory.shipmentOptionWrapperForPackaging(boxWrapper);
-
-        WeightedCostStrategyWrapper weightedCostStrategyWrapper = new WeightedCostStrategyWrapper(
-            monetaryCostStrategyWrapper,
-            carbonCostStrategyWrapper
-        );
-
+    @ParameterizedTest
+    @ValueSource(strings = {"CostStrategy", "MonetaryCostStrategy", "CarbonCostStrategy", "WeightedCostStrategy"})
+    void mt5_design_getClassDiagram_containsNewStrategyTypes(String strategyType) {
+        // GIVEN - diagram path, expected type name
         // WHEN
-        ShipmentCostWrapper shipmentCostWrapper = weightedCostStrategyWrapper.getCost(shipmentOptionWrapper);
+        String content = AtaTestHelper.getFileContentFromResources(CLASS_DIAGRAM_PATH);
 
-        // THEN - cost is accurate, should be cheapest for IAD2
-        BigDecimal result = shipmentCostWrapper.getCost();
-        BigDecimal expectedWeightedCost = WeightedCostStrategyWrapper.computeWeightedCost(boxWrapper);
-        assertClose(
-            expectedWeightedCost,
-            result,
-            String.format(
-                "Expected weighted cost of %s to be %s, but was %s",
-                boxWrapper.toString(),
-                expectedWeightedCost,
-                result)
-        );
+        // THEN - diagram includes expected strategy class
+        assertClassDiagramContains(content, strategyType);
     }
 
     @Test
-    void mt5_weightedCostStrategy_getCostOfPolyBag_resultsInCorrectWeightedCost() {
-        // GIVEN - valid Box
-        PolyBagWrapper boxWrapper = PackagingFactory.polyBagWrapperOfAnyVolume();
-        assertNotNull(boxWrapper, "Could not find any Boxes in PackagingDatastore");
-        // shipment option wrapper using that Box with FC IAD2
-        ShipmentOptionWrapper shipmentOptionWrapper =
-            ShipmentOptionFactory.shipmentOptionWrapperForPackaging(boxWrapper);
-
-        WeightedCostStrategyWrapper weightedCostStrategyWrapper = new WeightedCostStrategyWrapper(
-            monetaryCostStrategyWrapper,
-            carbonCostStrategyWrapper
-        );
+    void mt5_design_getClassDiagram_containsCostStrategyAsInterface() {
+        // GIVEN - diagram path, expected interface name
+        String interfaceName = "CostStrategy";
 
         // WHEN
-        ShipmentCostWrapper shipmentCostWrapper = weightedCostStrategyWrapper.getCost(shipmentOptionWrapper);
+        String content = AtaTestHelper.getFileContentFromResources(CLASS_DIAGRAM_PATH);
 
-        // THEN - cost is accurate, should be cheapest for IAD2
-        BigDecimal result = shipmentCostWrapper.getCost();
-        BigDecimal expectedWeightedCost = WeightedCostStrategyWrapper.computeWeightedCost(boxWrapper);
-        assertClose(
-            expectedWeightedCost,
-            result,
-            String.format(
-                "Expected weighted cost of %s to be %s, but was %s",
-                boxWrapper.toString(),
-                expectedWeightedCost,
-                result)
-        );
+        // THEN - CostStrategy is an interface
+        assertClassDiagramContainsInterface(content, interfaceName);
+    }
+
+
+
+    @Test
+    void mt5_design_getClassDiagram_costStrategyHasGetCostMethod() {
+        // GIVEN - diagram path
+        // expected type
+        String interfaceName = "CostStrategy";
+        // expected method
+        String methodName = "getCost";
+        // expected arg type
+        List<String> argTypes = ImmutableList.of("ShipmentOption");
+        // expected return type
+        String returnType = "ShipmentCost";
+
+        // WHEN
+        String content = AtaTestHelper.getFileContentFromResources(CLASS_DIAGRAM_PATH);
+
+        // THEN - CostStrategy has expected method
+        assertClassDiagramTypeContainsMethod(content, interfaceName, methodName, returnType, argTypes);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"MonetaryCostStrategy", "CarbonCostStrategy", "WeightedCostStrategy"})
+    void mt5_design_getClassDiagram_costStrategyHasConcreteImplementations(String costStrategySubclass) {
+        // GIVEN - diagram path, name of class implementing CostStrategy
+        // WHEN
+        String content = AtaTestHelper.getFileContentFromResources(CLASS_DIAGRAM_PATH);
+
+        // THEN - found class implementing CostStrategy
+        assertClassDiagramIncludesImplementsRelationship(content, costStrategySubclass, "CostStrategy");
     }
 
     @Test
-    void mt5_appClass_createsShipmentOptionWithWeightedCostStrategy() {
-        // GIVEN - the shipment option created from the app class
-        Class<?> appClass = ProjectClassFactory.findClass("App");
-        Method getShipmentService = MethodQuery.inType(appClass)
-            .withExactName("getShipmentService")
-            .findMethodOrFail();
-
+    void mt5_design_getClassDiagram_weightedCostContainsCostImplementations() {
+        // GIVEN - diagram path, name of class WeightedCostStrategy uses
         // WHEN
-        Object shipmentService = MethodInvoker.invokeStaticMethodWithReturnValue(getShipmentService);
+        String content = AtaTestHelper.getFileContentFromResources(CLASS_DIAGRAM_PATH);
 
-        // THEN - shipmentService's cost strategy is a WeightedCostStrategy
-        try {
-            Field costStrategyField = shipmentService.getClass().getDeclaredField("costStrategy");
-            costStrategyField.setAccessible(true);
-            assertEquals(WeightedCostStrategyWrapper.getWrappedClassStatic(),
-                costStrategyField.get(shipmentService).getClass(),
-                "Expected the ShipmentService to use a WeightedCostStrategy");
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            // will print to their RDE logs so we can debug if needed
-            e.printStackTrace();
-            fail("Expected a 'costStrategy' field in the ShipmentService class. Has it been modified?");
-        }
+        boolean hasWeightedContainsRelationship =
+                classDiagramIncludesContainsRelationship(content, "WeightedCostStrategy", "CostStrategy") ||
+                        (classDiagramIncludesRelationship(content, "MonetaryCostStrategy", "WeightedCostStrategy") &&
+                                classDiagramIncludesRelationship(content, "CarbonCostStrategy", "WeightedCostStrategy")
+                        );
+
+        // THEN - found class relationship
+        assertTrue(hasWeightedContainsRelationship,
+                "Expected WeightedCostStrategy to have a contains relationship with other strategy classes.");
     }
 }

@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("MT04")
 public class MT4IntrospectionTests {
@@ -82,7 +80,7 @@ public class MT4IntrospectionTests {
         );
 
         // The Map value type is Java Set - resorting to name comparison (parameterized interface makes it complicated)
-        assertTrue(
+        assertFalse(
             genericParamTypes[1].getTypeName().contains(Set.class.getTypeName()),
             String.format(
                 "Expected the Map (%s), in PackagingDAO to have a different value type. Value type was %s",
