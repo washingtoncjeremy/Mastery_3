@@ -19,7 +19,7 @@ public class PackagingDAO {
      * A list of fulfillment centers with a packaging options they provide.
      */
     private List<FcPackagingOption> fcPackagingOptions;
-    private Map<FulfillmentCenter, HashSet<FcPackagingOption>> fcPackagingOptionsMap = new HashMap<>();
+    private Map<FulfillmentCenter, FcPackagingOption> fcPackagingOptionsMap = new HashMap<>();
 
     /**
      * Instantiates a PackagingDAO object.

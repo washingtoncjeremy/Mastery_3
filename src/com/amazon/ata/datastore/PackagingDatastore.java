@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class PackagingDatastore {
 
-    private Map<FulfillmentCenter, HashSet<FcPackagingOption>> fcPackagingOptionsMap = new HashMap<>();
+    private Map<FulfillmentCenter, FcPackagingOption> fcPackagingOptionsMap = new HashMap<>();
 
 
     /**
@@ -62,11 +62,11 @@ public class PackagingDatastore {
 
     private void createFcPackagingOptionMap() {
 
-        for(FcPackagingOption packagingOption : fcPackagingOptions) {
+        for (FcPackagingOption packagingOption : fcPackagingOptions) {
 
-            if(!fcPackagingOptionsMap.containsKey(packagingOption.getFulfillmentCenter())) {
+            if (!fcPackagingOptionsMap.containsKey(packagingOption.getFulfillmentCenter())) {
 
-                fcPackagingOptionsMap.put(packagingOption.getFulfillmentCenter(), new HashSet<>(Arrays.asList(packagingOption)));
+                fcPackagingOptionsMap.put(packagingOption.getFulfillmentCenter(), packagingOption);
 
             }
 
@@ -78,7 +78,7 @@ public class PackagingDatastore {
         return fcPackagingOptions;
     }
 
-    public Map<FulfillmentCenter, HashSet<FcPackagingOption>> getFcPackagingOptionsMap() {
+    public Map<FulfillmentCenter, FcPackagingOption> getFcPackagingOptionsMap() {
 
         return fcPackagingOptionsMap;
 
