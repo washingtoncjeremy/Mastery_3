@@ -30,7 +30,7 @@ public class PackagingDatastore {
             createFcPackagingOption("PDX1", Material.CORRUGATE, "60", "60", "60")
     );
 
-    public PackagingDatastore(){
+    public PackagingDatastore() {
 
         createFcPackagingOptionMap();
 
@@ -60,11 +60,11 @@ public class PackagingDatastore {
         return new FcPackagingOption(fulfillmentCenter, packaging);
     }
 
-    private void createFcPackagingOptionMap(){
+    private void createFcPackagingOptionMap() {
 
-        for(FcPackagingOption packagingOption : fcPackagingOptions){
+        for(FcPackagingOption packagingOption : fcPackagingOptions) {
 
-            if(!fcPackagingOptionsMap.containsKey(packagingOption.getFulfillmentCenter())){
+            if(!fcPackagingOptionsMap.containsKey(packagingOption.getFulfillmentCenter())) {
 
                 fcPackagingOptionsMap.put(packagingOption.getFulfillmentCenter(), new HashSet<>(Arrays.asList(packagingOption)));
 
@@ -78,7 +78,7 @@ public class PackagingDatastore {
         return fcPackagingOptions;
     }
 
-    public Map<FulfillmentCenter, HashSet<FcPackagingOption>> getFcPackagingOptionsMap(){
+    public Map<FulfillmentCenter, HashSet<FcPackagingOption>> getFcPackagingOptionsMap() {
 
         return fcPackagingOptionsMap;
 
